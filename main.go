@@ -16,13 +16,13 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		globalBuff := make([]byte, 100)
+		buff := make([]byte, 100)
 		last := 0
 		for {
-			n, _, _ := conn.ReadFrom(globalBuff[:])
-			current, _ := strconv.Atoi(string(globalBuff[:n]))
+			n, _, _ := conn.ReadFrom(buff[:])
+			current, _ := strconv.Atoi(string(buff[:n]))
 			if last+1 != current {
-				fmt.Println(fmt.Errorf("got %s wanted %d", string(globalBuff[:n]), last+1))
+				fmt.Println(fmt.Errorf("got %s wanted %d", string(buff[:n]), last+1))
 			}
 			last = current
 		}
