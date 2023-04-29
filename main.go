@@ -5,6 +5,8 @@ import (
 	"net"
 	"os"
 	"os/signal"
+	"sync/atomic"
+	"time"
 )
 
 func main() {
@@ -18,12 +20,19 @@ func main() {
 		srv := &Server{
 			conn: conn,
 			fn: func(data []byte, addr net.Addr) {
-				fmt.Println(string(data))
+				//fmt.Println(string(data))
 			}}
+		c := atomic.Int32{}
+		go func() {
+			for range time.NewTicker(time.Second).C {
+				fmt.Printf("%d\n", c.Swap(0))
+			}
+		}()
 		globalBuff := make([]byte, 4096)
 		for {
 			n, addr, _ := conn.ReadFrom(globalBuff)
 			srv.Serve(globalBuff[:n], addr)
+			c.Add(1)
 		}
 	}()
 	done := make(chan os.Signal, 1)
