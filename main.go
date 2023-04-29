@@ -22,7 +22,7 @@ func main() {
 			n, _, _ := conn.ReadFrom(globalBuff[:])
 			current, _ := strconv.Atoi(string(globalBuff[:n]))
 			if last+1 != current {
-				fmt.Println(fmt.Errorf("got %s wanted %d"), string(globalBuff[:n]), current+1)
+				fmt.Println(fmt.Errorf("got %s wanted %d", string(globalBuff[:n]), current+1))
 			}
 		}
 	}()
