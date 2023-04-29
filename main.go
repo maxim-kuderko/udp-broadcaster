@@ -28,18 +28,14 @@ func main() {
 				fmt.Printf("rate %d, out of order %d/s, latency %d\n", rate.Swap(0), c.Swap(0), latency.Milliseconds())
 			}
 		}()
-		go func() {
-			for range time.NewTicker(time.Second).C {
-				conn.Write([]byte(fmt.Sprintf("l%d", time.Now().UnixMilli())))
-			}
-		}()
 		for {
-			n, _, _ := conn.ReadFrom(buff[:])
+			n, addr, _ := conn.ReadFrom(buff[:])
 			if buff[0] == 'l' {
 				ts, _ := strconv.Atoi(string(buff[1:n]))
 				latency = time.Since(time.UnixMilli(int64(ts)))
 				continue
 			}
+			conn.WriteTo([]byte(fmt.Sprintf("l%d", time.Now().UnixMilli())), addr)
 			current, _ := strconv.Atoi(string(buff[:n]))
 			rate.Add(1)
 			if last+1 != current {
