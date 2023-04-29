@@ -26,7 +26,7 @@ func main() {
 			srv.Serve(globalBuff[:n], addr)
 		}
 	}()
-	done := make(chan os.Signal)
+	done := make(chan os.Signal, 1)
 	signal.Notify(done, os.Kill, os.Interrupt)
 	fmt.Println(<-done)
 
