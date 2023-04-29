@@ -15,10 +15,10 @@ func main() {
 		conn, err := net.ListenUDP("udp", &net.UDPAddr{
 			Port: 5000,
 		})
-		conn.SetReadBuffer(1024 * 1024)
 		if err != nil {
 			panic(err)
 		}
+		conn.SetReadBuffer(1024 * 1024)
 		srv := &Server{
 			conn: conn,
 			fn: func(data []byte, addr net.Addr) {
