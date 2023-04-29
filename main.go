@@ -15,6 +15,7 @@ func main() {
 		conn, err := net.ListenUDP("udp", &net.UDPAddr{
 			Port: 5000,
 		})
+		conn.SetReadBuffer(1024 * 1024)
 		if err != nil {
 			panic(err)
 		}
@@ -29,11 +30,12 @@ func main() {
 				fmt.Printf("%d\n", c.Swap(0))
 			}
 		}()
+		globalBuff := make([]byte, 100)
 		for {
-			globalBuff := make([]byte, 1024)
 			n, addr, _ := conn.ReadFrom(globalBuff[:])
 			srv.Serve(globalBuff[:n], addr)
 			c.Add(1)
+			globalBuff = globalBuff[:0]
 		}
 	}()
 	done := make(chan os.Signal, 1)
