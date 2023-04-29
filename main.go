@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net"
 	"os"
 	"os/signal"
@@ -22,7 +21,7 @@ func main() {
 		srv := &Server{
 			conn: conn,
 			fn: func(data []byte, addr net.Addr) {
-				log.Println(string(data))
+				//log.Println(string(data))
 			}}
 		c := atomic.Int32{}
 		go func() {
