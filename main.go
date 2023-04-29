@@ -34,6 +34,7 @@ func main() {
 			n, addr, _ := conn.ReadFrom(globalBuff[:])
 			srv.Serve(globalBuff[:n], addr)
 			c.Add(1)
+			globalBuff = globalBuff[:0]
 		}
 	}()
 	done := make(chan os.Signal, 1)
