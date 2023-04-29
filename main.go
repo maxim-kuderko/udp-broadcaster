@@ -18,11 +18,7 @@ func main() {
 			panic(err)
 		}
 		conn.SetReadBuffer(1024 * 1024)
-		srv := &Server{
-			conn: conn,
-			fn: func(data []byte, addr net.Addr) {
-				//log.Println(string(data))
-			}}
+		srv := NewServer(conn)
 		c := atomic.Int32{}
 		go func() {
 			for range time.NewTicker(time.Second).C {
