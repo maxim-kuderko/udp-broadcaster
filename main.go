@@ -25,7 +25,7 @@ func main() {
 		var latency time.Duration
 		go func() {
 			for range time.NewTicker(time.Second).C {
-				fmt.Printf("rate %d, out of order %d/s, latency %d\n", rate.Swap(0), c.Swap(0), latency.Milliseconds())
+				fmt.Printf("rate %d, out of order %d/s, latency %dms\n", rate.Swap(0), c.Swap(0), latency.Milliseconds())
 			}
 		}()
 		for {
