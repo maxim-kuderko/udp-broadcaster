@@ -12,7 +12,7 @@ func main() {
 }
 
 func run() {
-	udpServer, err := net.ResolveUDPAddr("udp", ":5000")
+	udpServer, err := net.ResolveUDPAddr("udp", "51.195.41.196:5000")
 
 	if err != nil {
 		log.Panicf("ResolveUDPAddr failed: %s", err.Error())
@@ -26,6 +26,6 @@ func run() {
 	for {
 		conn.Write([]byte(strconv.Itoa(i)))
 		i++
-		time.Sleep(time.Nanosecond)
+		time.Sleep(time.Millisecond)
 	}
 }

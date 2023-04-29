@@ -23,7 +23,7 @@ func main() {
 		c := atomic.Int32{}
 		go func() {
 			for range time.NewTicker(time.Second).C {
-				fmt.Printf("out of order %d/s", c.Swap(0))
+				fmt.Printf("out of order %d/s\n", c.Swap(0))
 			}
 		}()
 		for {
