@@ -21,14 +21,16 @@ func main() {
 		buff := make([]byte, 100)
 		last := 0
 		c := atomic.Int32{}
+		rate := atomic.Int32{}
 		go func() {
 			for range time.NewTicker(time.Second).C {
-				fmt.Printf("out of order %d/s\n", c.Swap(0))
+				fmt.Printf("rate %d, out of order %d/s\n", rate.Swap(0), c.Swap(0))
 			}
 		}()
 		for {
 			n, _, _ := conn.ReadFrom(buff[:])
 			current, _ := strconv.Atoi(string(buff[:n]))
+			rate.Add(1)
 			if last+1 != current {
 				c.Add(1)
 			}
