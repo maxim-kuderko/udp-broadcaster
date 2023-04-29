@@ -20,7 +20,7 @@ func main() {
 		srv := &Server{
 			conn: conn,
 			fn: func(data []byte, addr net.Addr) {
-				fmt.Println(string(data))
+				//fmt.Println(string(data))
 			}}
 		c := atomic.Int32{}
 		go func() {
