@@ -22,13 +22,24 @@ func main() {
 		last := 0
 		c := atomic.Int32{}
 		rate := atomic.Int32{}
+		var latency time.Duration
 		go func() {
 			for range time.NewTicker(time.Second).C {
-				fmt.Printf("rate %d, out of order %d/s\n", rate.Swap(0), c.Swap(0))
+				fmt.Printf("rate %d, out of order %d/s, latency %d\n", rate.Swap(0), c.Swap(0), latency.Milliseconds())
+			}
+		}()
+		go func() {
+			for range time.NewTicker(time.Second).C {
+				conn.Write([]byte(fmt.Sprintf("l%d", time.Now().UnixMilli())))
 			}
 		}()
 		for {
 			n, _, _ := conn.ReadFrom(buff[:])
+			if buff[0] == 'l' {
+				ts, _ := strconv.Atoi(string(buff[1:n]))
+				latency = time.Since(time.UnixMilli(int64(ts)))
+				continue
+			}
 			current, _ := strconv.Atoi(string(buff[:n]))
 			rate.Add(1)
 			if last+1 != current {

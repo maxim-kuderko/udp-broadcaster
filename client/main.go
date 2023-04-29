@@ -23,6 +23,13 @@ func run() {
 		log.Panicf("Listen failed: %s", err.Error())
 	}
 	i := 1
+	go func() {
+		b := make([]byte, 100)
+		for {
+			n, _ := conn.Read(b[:])
+			conn.Write(b[:n])
+		}
+	}()
 	for {
 		conn.Write([]byte(strconv.Itoa(i)))
 		i++
