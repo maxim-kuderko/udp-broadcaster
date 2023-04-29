@@ -5,8 +5,7 @@ import (
 	"net"
 	"os"
 	"os/signal"
-	"sync/atomic"
-	"time"
+	"strconv"
 )
 
 func main() {
@@ -17,19 +16,14 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		conn.SetReadBuffer(1024 * 1024)
-		srv := NewServer(conn)
-		c := atomic.Int32{}
-		go func() {
-			for range time.NewTicker(time.Second).C {
-				fmt.Printf("%d\n", c.Swap(0))
-			}
-		}()
 		globalBuff := make([]byte, 100)
+		last := 0
 		for {
-			n, addr, _ := conn.ReadFrom(globalBuff[:])
-			srv.Serve(globalBuff[:n], addr)
-			c.Add(1)
+			n, _, _ := conn.ReadFrom(globalBuff[:])
+			current, _ := strconv.Atoi(string(globalBuff[:n]))
+			if last+1 != current {
+				fmt.Println(fmt.Errorf("got %s wanted %d"), string(globalBuff[:n]), current+1)
+			}
 		}
 	}()
 	done := make(chan os.Signal, 1)
